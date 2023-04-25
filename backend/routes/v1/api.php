@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\PostController;
 use App\Http\Controllers\Api\v1\PostController1;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -20,15 +21,15 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 
-Route::name('api.')->group(function () {
+Route::name('api.')->group(callback: function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->group(callback: function () {
         Route::post('/identity', [AuthController::class, 'identity'])->name('identity');
     });
 
-    Route::name('posts.')->prefix('posts')->group(function () {
-        Route::get('/', [PostController1::class, 'index'])->name('index');
+    Route::name('posts.')->prefix('posts')->group(callback: function () {
+        Route::apiResource(PostController::class);
     });
 });
