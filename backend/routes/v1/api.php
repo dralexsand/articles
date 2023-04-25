@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\v1\PostController;
+use App\Http\Controllers\Api\v1\PostController1;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +29,6 @@ Route::name('api.')->group(function () {
     });
 
     Route::name('posts.')->prefix('posts')->group(function () {
-        Route::get('/', [PostController::class, 'index'])->name('index');
+        Route::get('/', [PostController1::class, 'index'])->name('index');
     });
 });
