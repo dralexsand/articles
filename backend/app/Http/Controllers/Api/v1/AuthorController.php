@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Author\PostRequest;
 use App\Http\Requests\Author\UpdateRequest;
-use App\Http\Resources\AuthorResource;
 use App\Http\Resources\AuthorCollection;
+use App\Http\Resources\AuthorResource;
 use App\Models\Author;
+use App\Services\AuthorFilterService;
+use App\Services\FilterServiceInterface;
 use App\Traits\ResponseTrait;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,17 +18,22 @@ class AuthorController extends Controller
 
     use ResponseTrait;
 
+    protected FilterServiceInterface $filterService;
+
+    public function __construct(AuthorFilterService $filterService)
+    {
+        $this->filterService = $filterService;
+    }
+
     public function index(): Response
     {
-        $request = \request()->all();
+        $query = Author::query();
 
-        $authors = Author::paginate();
+        $query = $this->filterService->getFilteredQuery($query);
 
-        if (!$authors) {
-            $collect = null;
-        } else {
-            $collect = new AuthorCollection($authors);
-        }
+        $authors = $query->paginate();
+
+        $collect = new AuthorCollection($authors);
 
         return $this->getResponse($collect, 200, 200, 'Resource not found');
     }

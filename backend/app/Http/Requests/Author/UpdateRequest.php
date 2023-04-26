@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Author;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\EntityRequestInterface;
 
-class UpdateRequest extends PostRequest
+class UpdateRequest extends PostRequest implements EntityRequestInterface
 {
     /**
      * Determine if the user is authorized to make this request.

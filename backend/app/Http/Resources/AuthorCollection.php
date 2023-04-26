@@ -7,6 +7,15 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class AuthorCollection extends ResourceCollection
 {
+
+    public $resource;
+
+    public function __construct($resource)
+    {
+        parent::__construct($resource);
+        $this->resource = $resource;
+    }
+
     /**
      * Transform the resource collection into an array.
      *
@@ -16,6 +25,19 @@ class AuthorCollection extends ResourceCollection
     {
         return [
             'authors' => $this->collection,
+            'pagination' => $this->getPagination(),
+        ];
+    }
+
+    protected function getPagination(): array
+    {
+        return [
+            'perPage' => $this->resource->perPage(),
+            'currentPage' => $this->resource->currentPage(),
+            'path' => $this->resource->path(),
+            'pageName' => 'page',
+            'total' => $this->resource->total(),
+            'lastPage' => $this->resource->lastPage(),
         ];
     }
 }

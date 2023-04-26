@@ -8,6 +8,8 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Services\FilterServiceInterface;
+use App\Services\PostFilterService;
 use App\Traits\ResponseTrait;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,17 +18,22 @@ class PostController extends Controller
 {
     use ResponseTrait;
 
+    protected FilterServiceInterface $filterService;
+
+    public function __construct(PostFilterService $filterService)
+    {
+        $this->filterService = $filterService;
+    }
+
     public function index(): Response
     {
-        $request = \request()->all();
+        $query = Post::query();
 
-        $posts = Post::paginate();
+        $query = $this->filterService->getFilteredQuery($query);
 
-        if (!$posts) {
-            $collect = null;
-        } else {
-            $collect = new PostCollection($posts);
-        }
+        $posts = $query->paginate();
+
+        $collect = new PostCollection($posts);
 
         return $this->getResponse($collect, 200, 200, 'Resource not found');
     }
@@ -39,7 +46,7 @@ class PostController extends Controller
         return $this->getResponse($post, 201, 200, 'Error created');
     }
 
-    public function show(int $id): Response
+    public function show(string $id): Response
     {
         $post = Post::find($id);
 
@@ -69,7 +76,7 @@ class PostController extends Controller
         }
     }
 
-    public function destroy(int $id): Response
+    public function destroy(string $id): Response
     {
         $post = Post::find($id);
 

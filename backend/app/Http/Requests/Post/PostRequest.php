@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Post;
 
+use App\Http\Requests\EntityRequestInterface;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostRequest extends FormRequest
+class PostRequest extends FormRequest implements EntityRequestInterface
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +23,7 @@ class PostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'author_id' => ['required', 'integer'],
+            'author_id' => ['required', 'numeric'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:3000'],
