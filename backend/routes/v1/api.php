@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AuthorController;
 use App\Http\Controllers\Api\v1\PostController;
 use App\Http\Controllers\Api\v1\PostController1;
 use App\Http\Controllers\AuthController;
@@ -29,7 +30,9 @@ Route::name('api.')->group(callback: function () {
         Route::post('/identity', [AuthController::class, 'identity'])->name('identity');
     });
 
-    Route::name('posts.')->prefix('posts')->group(callback: function () {
-        Route::apiResource(PostController::class);
-    });
+    Route::apiResource('posts', PostController::class);
+    Route::apiResource('authors', AuthorController::class);
+    /*Route::name('posts.')->prefix('posts')->group(callback: function () {
+
+    });*/
 });
