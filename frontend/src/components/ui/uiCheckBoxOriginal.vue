@@ -8,6 +8,7 @@
           :name="form.name"
           :class="form.class"
           :checked="formValue"
+          @change="onChange(formValue, form.name)"
       />
       <label class="ml-2 text-sm" for="email">
         {{ form.label }}
@@ -36,10 +37,10 @@ export default {
 
     const formValue = ref(false);
 
-    const onChange = () => {
+    const onChange = (value, name) => {
       emit('handleUiCheckBox', {
-        name: this.form.name,
-        value: {item: formValue.value}
+        name: name,
+        value: value
       })
     }
 
@@ -51,3 +52,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.block {
+  padding: 5px;
+}
+</style>

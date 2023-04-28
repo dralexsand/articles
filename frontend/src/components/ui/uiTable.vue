@@ -60,14 +60,17 @@
                   :class="tdClass">
                 <div class="inline-flex">
                   <button
+                      @click.prevent="onClickAction(post.id, 'view')"
                       class="hover:bg-gray-300 font-bold py-2 px-3 rounded-l">
                     <icon-view/>
                   </button>
                   <button
+                      @click.prevent="onClickAction(post.id, 'edit')"
                       class="hover:bg-gray-300 font-bold py-2 px-3 rounded-r">
                     <icon-edit/>
                   </button>
                   <button
+                      @click.prevent="onClickAction(post.id, 'delete')"
                       class="hover:bg-gray-300 font-bold py-2 px-3 rounded-r">
                     <icon-trash/>
                   </button>
@@ -117,7 +120,8 @@ export default {
     pagination: {}
   },
   emits: [
-    'handleSubmitTablePagination'
+    'handleSubmitTablePagination',
+    'handleAction',
   ],
   setup(props, {emit}) {
 
@@ -128,13 +132,21 @@ export default {
       })
     }
 
+    const onClickAction = (item, type) => {
+      emit('handleAction', {
+        type: type,
+        value: item,
+      })
+    }
+
     const thClass = ref('px-3 py-3');
     const tdClass = ref('px-3 py-3');
 
     return {
       tdClass,
       thClass,
-      onClickPagination
+      onClickPagination,
+      onClickAction
     }
   }
 }
