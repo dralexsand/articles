@@ -11,6 +11,15 @@ const routes = [
         },
     },
     {
+        path: '/login',
+        name: 'login',
+        component: () => import('../components/views/pages/Login.vue'),
+        meta: {
+            position: 'topnav',
+            order: 5,
+        },
+    },
+    {
         path: '/demo',
         name: 'demo',
         component: () => import('../components/views/pages/DemoPage.vue'),
