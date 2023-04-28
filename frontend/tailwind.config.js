@@ -2,7 +2,8 @@
 export default {
     content: [
         "./index.html",
-        "./src/**/*.{vue,js,html,ts,jsx,tsx}"
+        "./src/**/*.{vue,js,html,ts,jsx,tsx}",
+        "./node_modules/tw-elements/dist/js/**/*.js"
     ],
     theme: {
         extend: {},
@@ -12,6 +13,7 @@ export default {
             strategy: 'base', // only generate global styles
             //strategy: 'class', // only generate classes
         }),
+        require("tw-elements/dist/plugin.cjs")
     ],
 }
 

@@ -29,12 +29,11 @@
         @handleAction="onHandleAction"
     >
     </ui-table>
-
-
   </div>
 </template>
 <script>
 import {computed, onMounted, ref} from "vue";
+import {useRouter} from 'vue-router'
 import {apiGet} from "../../../use/methods.js";
 import uiTable from "../../ui/uiTable.vue";
 import uiFilterBox from "../../ui/uiFilterBox.vue";
@@ -50,6 +49,9 @@ export default {
   },
   props: {},
   setup() {
+
+    const router = useRouter()
+
     const posts = ref({})
     const pagination = ref({})
 
@@ -148,8 +150,15 @@ export default {
     }
 
     const onHandleAction = (item) => {
-      //console.log('onHandleView clicked')
-      console.log(item)
+      if (item.type !== 'delete') {
+        //let path = '/' + item.type + '/${' + item.value + '}'
+        let path = '/' + item.type + '/' + item.value
+        router.push({path: path})
+      } else {
+        console.log('Deleting')
+        console.log(item)
+      }
+
     }
 
     const thClass = ref('px-3 py-3');

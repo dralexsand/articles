@@ -20,6 +20,33 @@ const routes = [
         },
     },
     {
+        path: '/view/:id',
+        name: 'view',
+        component: () => import('../components/views/pages/Page.vue'),
+        meta: {
+            position: 'actions',
+            order: 5,
+        },
+    },
+    {
+        path: '/edit/:id',
+        name: 'edit',
+        component: () => import('../components/views/pages/Page.vue'),
+        meta: {
+            position: 'actions',
+            order: 5,
+        },
+    },
+    {
+        path: '/create/:id',
+        name: 'create',
+        component: () => import('../components/views/pages/Page.vue'),
+        meta: {
+            position: 'actions',
+            order: 5,
+        },
+    },
+    {
         path: '/demo',
         name: 'demo',
         component: () => import('../components/views/pages/DemoPage.vue'),
