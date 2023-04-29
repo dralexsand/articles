@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Author\PostRequest;
 use App\Http\Requests\Author\UpdateRequest;
 use App\Http\Resources\AuthorCollection;
+use App\Http\Resources\AuthorCollectionFiltered;
+use App\Http\Resources\AuthorFilteredResource;
 use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use App\Services\AuthorFilterService;
@@ -23,6 +25,15 @@ class AuthorController extends Controller
     public function __construct(AuthorFilterService $filterService)
     {
         $this->filterService = $filterService;
+    }
+
+    public function list(): Response
+    {
+        $authors = Author::query()->get();
+
+        $collect = AuthorFilteredResource::collection($authors);
+
+        return $this->getResponse($collect, 200, 200, 'Resource not found');
     }
 
     public function index(): Response

@@ -10,6 +10,7 @@
       <ui-form
           :form="dataForm"
           @handleApply="onHandleApply"
+          mode="create"
       />
 
   </div>
@@ -18,7 +19,7 @@
 <script>
 import {useRoute} from 'vue-router'
 import {onMounted, ref} from "vue";
-import {apiGet} from "../../../use/methods.js";
+import {apiGet, apiPost} from "../../../use/methods.js";
 import uiForm from "../../ui/uiForm.vue";
 import moment from "moment";
 import {baseApiUrl} from "../../../use/states.js";
@@ -34,9 +35,10 @@ export default {
 
     const dataForm = ref({})
 
-    const loadPost = (page) => {
+    const createPost = (page) => {
       let url = baseApiUrl + '/posts/' + page
-      apiGet(url, showPost)
+      let params = {}
+      apiPost(url, params, showPost)
     }
 
     const showPost = (data) => {
@@ -71,8 +73,8 @@ export default {
     })
 
     const onHandleApply = (item) => {
-      console.log('onHandleApply clicked')
-      console.log(item)
+      //console.log('onHandleApply clicked')
+      console.log(item.value)
     }
 
     return {

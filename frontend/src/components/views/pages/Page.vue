@@ -1,24 +1,25 @@
 <template>
 
   <p class="text-3xl text-gray-700 font-bold mb-5">
-    {{ $route.name==='view' ? 'View post #' + post.id : 'Edit post #' + post.id }}
+    {{ mode === 'view' ? 'View post #' + post.id : 'Edit post #' + post.id }}
   </p>
 
   <div class="container mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10">
 
-   <div
-       v-if="$route.name==='view'"
-   >
-     <ui-form-view
-         :form="dataForm"
-     />
-   </div>
     <div
-        v-if="$route.name==='edit'"
+        v-if="mode==='view'"
+    >
+      <ui-form-view
+          :form="dataForm"
+      />
+    </div>
+    <div
+        v-if="mode==='edit'"
     >
       <ui-form
           :form="dataForm"
           @handleApply="onHandleApply"
+          mode="edit"
       />
     </div>
 
@@ -28,7 +29,7 @@
 <script>
 import {useRoute} from 'vue-router'
 import {onMounted, ref} from "vue";
-import {apiGet} from "../../../use/methods.js";
+import {apiGet, apiPut} from "../../../use/methods.js";
 import uiForm from "../../ui/uiForm.vue";
 import uiFormView from "../../ui/uiFormView.vue";
 import {baseApiUrl} from "../../../use/states.js";
@@ -43,17 +44,31 @@ export default {
 
     const route = useRoute()
 
+    const mode = ref('')
+
     const post = ref({})
 
     const dataForm = ref({})
 
-    const loadPost = (page) => {
-      let url = baseApiUrl + '/posts/' + page
+    const loadPost = (postId) => {
+      let url = baseApiUrl + '/posts/' + postId
       apiGet(url, showPost)
     }
 
+    const updatePost = (postId, data) => {
+      let params = {
+        title: data.title,
+        description: data.description,
+        content: data.content,
+        author_id: post.value.author.id
+      }
+
+      let url = baseApiUrl + '/posts/' + postId
+      apiPut(url, params, showPost)
+    }
+
     const showPost = (data) => {
-      console.log(data.data)
+      post.value = data.data
       let dForm = {
         title: data.data.title,
         description: data.data.description,
@@ -65,21 +80,21 @@ export default {
     }
 
     onMounted(() => {
-      post.value = route.params
+      mode.value = route.name
       if (route.params.id !== null) {
         loadPost(route.params.id)
       }
     })
 
     const onHandleApply = (item) => {
-      console.log('onHandleApply clicked')
-      console.log(item)
+      updatePost(post.value.id, item.value)
     }
 
     return {
       post,
       dataForm,
-      onHandleApply
+      onHandleApply,
+      mode
     }
 
   }

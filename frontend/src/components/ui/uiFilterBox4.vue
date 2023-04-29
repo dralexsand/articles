@@ -19,14 +19,15 @@
 <script>
 
 import {onMounted, ref} from "vue";
-import { Select, initTE, Input, Datepicker } from "tw-elements";
+import {Select, initTE, Input, Datepicker} from "tw-elements";
+
 export default {
   props: {
     form: {
       class: {},
       label: {},
       name: {},
-    },
+    }
   },
   emits: [
     'handleUiCheckBox'
@@ -34,7 +35,7 @@ export default {
   setup(props, {emit}) {
 
     onMounted(() => {
-      initTE({ Select, Input, Datepicker });
+      initTE({Select, Input, Datepicker});
     });
 
     const formValue = ref(false);
@@ -71,6 +72,7 @@ export default {
 .block input {
   padding-left: 2px;
 }
+
 .block span {
 
 }

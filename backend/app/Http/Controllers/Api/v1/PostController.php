@@ -27,7 +27,7 @@ class PostController extends Controller
 
     public function index(): Response
     {
-        $query = Post::query();
+        $query = Post::query()->orderByDesc('id');
 
         $query = $this->filterService->getFilteredQuery($query);
 

@@ -40,10 +40,10 @@ export const apiGet = (url, callback = null) => {
 
 export const apiDelete = async (url, callback = null) => {
     await axios
-        .get(url)
+        .delete(url)
         .then(function (response) {
             // handle success
-            //console.log(response.data)
+            console.log(response.data)
             if (callback !== null) {
                 callback(response.data)
             }

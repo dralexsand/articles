@@ -30,8 +30,11 @@ Route::name('api.')->group(callback: function () {
         Route::post('/identity', [AuthController::class, 'identity'])->name('identity');
     });
 
+    Route::get('authors_list', [AuthorController::class, 'list']);
+
     Route::apiResource('posts', PostController::class);
     Route::apiResource('authors', AuthorController::class);
+
     /*Route::name('posts.')->prefix('posts')->group(callback: function () {
 
     });*/
