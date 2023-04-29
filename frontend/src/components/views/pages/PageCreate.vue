@@ -1,26 +1,16 @@
 <template>
-
-  <p class="text-3xl text-gray-700 font-bold mb-5">
-    {{ $route.name==='view' ? 'View post #' + post.id : 'Edit post #' + post.id }}
+  <p
+      v-if="$route.name==='create'"
+      class="text-3xl text-gray-700 font-bold mb-5">
+    Create new post:
   </p>
 
   <div class="container mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10">
 
-   <div
-       v-if="$route.name==='view'"
-   >
-     <ui-form-view
-         :form="dataForm"
-     />
-   </div>
-    <div
-        v-if="$route.name==='edit'"
-    >
       <ui-form
           :form="dataForm"
           @handleApply="onHandleApply"
       />
-    </div>
 
   </div>
 
@@ -30,20 +20,17 @@ import {useRoute} from 'vue-router'
 import {onMounted, ref} from "vue";
 import {apiGet} from "../../../use/methods.js";
 import uiForm from "../../ui/uiForm.vue";
-import uiFormView from "../../ui/uiFormView.vue";
+import moment from "moment";
 import {baseApiUrl} from "../../../use/states.js";
 
 export default {
   components: {
-    uiFormView,
     uiForm
   },
   props: {},
   setup() {
 
     const route = useRoute()
-
-    const post = ref({})
 
     const dataForm = ref({})
 
@@ -53,7 +40,7 @@ export default {
     }
 
     const showPost = (data) => {
-      console.log(data.data)
+      //console.log(data.data)
       let dForm = {
         title: data.data.title,
         description: data.data.description,
@@ -61,14 +48,26 @@ export default {
         published: data.data.created_at,
         author: data.data.author.full_name,
       }
+
+      dataForm.value = dForm
+    }
+
+    const showNewPost = () => {
+      //console.log(data.data)
+      let dForm = {
+        title: '',
+        description: '',
+        content: '',
+        published: moment().format('YYYY-MM-DD HH:m:s'),
+        author: '',
+      }
+
       dataForm.value = dForm
     }
 
     onMounted(() => {
-      post.value = route.params
-      if (route.params.id !== null) {
-        loadPost(route.params.id)
-      }
+      showNewPost()
+      //console.log(dataForm.value)
     })
 
     const onHandleApply = (item) => {
@@ -77,7 +76,6 @@ export default {
     }
 
     return {
-      post,
       dataForm,
       onHandleApply
     }

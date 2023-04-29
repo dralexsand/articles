@@ -22,6 +22,11 @@
 
     <ui-hr/>
 
+    <ui-simple-button
+        label='New'
+        @click="onHandleAction()"
+    />
+
     <ui-table
         :posts="posts"
         :pagination="pagination"
@@ -39,6 +44,7 @@ import uiTable from "../../ui/uiTable.vue";
 import uiFilterBox from "../../ui/uiFilterBox.vue";
 import uiHr from "../../ui/uiHr.vue";
 import uiSimpleButton from "../../ui/uiSimpleButton.vue";
+import {baseApiUrl} from "../../../use/states.js";
 
 export default {
   components: {
@@ -92,8 +98,6 @@ export default {
     }
 
     const filterValues = ref({})
-
-    const baseApiUrl = 'http://127.0.0.1:8097/api/v1';
 
     const loadPosts = (page = null) => {
       let url = getPostsPageUrl(page) + getFilters()
@@ -149,16 +153,19 @@ export default {
       loadPosts()
     }
 
-    const onHandleAction = (item) => {
-      if (item.type !== 'delete') {
+    const onHandleAction = (item = null) => {
+      if (item === null) {
+        console.log('New')
+        let path = '/create'
+        router.push({path: path})
+      } else if (item.type === 'view' || item.type === 'edit') {
         //let path = '/' + item.type + '/${' + item.value + '}'
         let path = '/' + item.type + '/' + item.value
         router.push({path: path})
-      } else {
+      } else if (item.type === 'delete') {
         console.log('Deleting')
         console.log(item)
       }
-
     }
 
     const thClass = ref('px-3 py-3');

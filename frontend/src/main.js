@@ -4,9 +4,16 @@ import './main.css'
 import App from './App.vue'
 import router from "./router";
 import store from "./store";
+import moment from "moment";
 
 const app = createApp(App)
-    .use(router)
-    .use(store);
+
+app.config.globalProperties.$filters = {
+    timeAgo(date) {
+        return moment(date).fromNow()
+    },
+}
+
+app.use(router).use(store)
 
 app.mount('#app')

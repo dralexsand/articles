@@ -15,49 +15,57 @@
 
         <form>
           <div class="form-group mb-6">
+            <label>Title</label>
             <input type="text"
                    class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                    id="exampleInput7"
-                   placeholder="Name"
-                   :value="form.title"
+                   :placeholder="form.title === '' ? 'title' : ''"
+                   v-model.trim="form.title"
             />
           </div>
 
           <div class="form-group mb-6">
+            <label>Description</label>
             <input type="text"
                    class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                    id="exampleInput7"
-                   placeholder="description"
-                   :value="form.description"
+                   :placeholder="form.description === '' ? 'description' : ''"
+                   v-model.trim="form.description"
             />
           </div>
 
           <div class="form-group mb-6">
-        <textarea
-            class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-            id="exampleFormControlTextarea13"
-            rows="3"
-            placeholder="Content"
-            :value="form.content"
-        ></textarea>
+            <label>Content</label>
+            <textarea
+                class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                id="exampleFormControlTextarea13"
+                rows="3"
+                :placeholder="form.content === '' ? 'content' : ''"
+                v-model.trim="form.content"
+            ></textarea>
           </div>
 
           <div class="form-group mb-6">
+            <label>Author</label>
             <input type="text"
                    class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                    id="exampleInput7"
-                   placeholder="description"
-                   :value="form.published"
+                   :placeholder="form.author === '' ? 'author' : ''"
+                   v-model.trim="form.author"
             />
           </div>
 
           <div class="form-group mb-6">
-            <input type="text"
-                   class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                   id="exampleInput7"
-                   placeholder="description"
-                   :value="form.author"
-            />
+            <label>Published</label>
+            <p class="mb-6">
+              {{ form.published }}
+            </p>
+          </div>
+
+          <div class="form-group mb-6">
+            <p class="mb-6 text-red-500">
+              {{ errorMessage }}
+            </p>
           </div>
 
         </form>
@@ -67,6 +75,7 @@
 
     <ui-simple-button
         label="Apply"
+        @click="onClickApply"
     />
 
   </div>
@@ -74,6 +83,7 @@
 <script>
 import uiSimpleButton from "./uiSimpleButton.vue";
 import {onMounted, ref} from "vue";
+import {isValidated, errorMessage, validateFormData} from "../../use/states.js";
 
 export default {
   components: {
@@ -82,17 +92,28 @@ export default {
   props: {
     form: {}
   },
-  setup(props) {
+  emits: [
+    'handleApply'
+  ],
+  setup(props, {emit}) {
 
-    const contentPage = ref({})
-
-    onMounted(() => {
-      //contentPage.value = props.form
-      //console.log(props.form.value)
-    })
+    const onClickApply = () => {
+      validateFormData(props.form)
+      if (isValidated.value) {
+        console.log('post create')
+        emit('handleApply', {
+          name: 'form',
+          value: props.form
+        })
+      } else {
+        console.log('error validation')
+      }
+    }
 
     return {
-      contentPage
+      onClickApply,
+      isValidated,
+      errorMessage
     }
   }
 }

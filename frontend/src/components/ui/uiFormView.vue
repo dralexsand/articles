@@ -22,11 +22,11 @@
       </p>
 
       <p class="mb-6">
-        {{ form.published }}
+       <strong>{{ form.author }}</strong>
       </p>
 
       <p class="mb-6">
-       <strong>{{ form.author }}</strong>
+        {{ form.published }}
       </p>
 
     </section>

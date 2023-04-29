@@ -38,9 +38,9 @@ const routes = [
         },
     },
     {
-        path: '/create/:id',
+        path: '/create',
         name: 'create',
-        component: () => import('../components/views/pages/Page.vue'),
+        component: () => import('../components/views/pages/PageCreate.vue'),
         meta: {
             position: 'actions',
             order: 5,
