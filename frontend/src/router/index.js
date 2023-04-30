@@ -1,4 +1,5 @@
 import {createRouter, createWebHistory} from "vue-router";
+import guest from "./middleware/guest.js";
 
 const routes = [
     {
@@ -8,6 +9,9 @@ const routes = [
         meta: {
             position: 'topnav',
             order: 1,
+            middleware: [
+                guest
+            ]
         },
     },
     {
@@ -15,7 +19,7 @@ const routes = [
         name: 'login',
         component: () => import('../components/views/pages/Login.vue'),
         meta: {
-            position: 'topnav',
+            position: 'auth',
             order: 5,
         },
     },
@@ -40,7 +44,7 @@ const routes = [
     {
         path: '/create',
         name: 'create',
-        component: () => import('../components/views/pages/PageCreate.vue'),
+        component: () => import('../components/views/pages/Page.vue'),
         meta: {
             position: 'actions',
             order: 5,
@@ -49,10 +53,10 @@ const routes = [
     {
         path: '/demo',
         name: 'demo',
-        component: () => import('../components/views/pages/DemoPage.vue'),
+        component: () => import('../components/views/pages/Demo.vue'),
         meta: {
             position: 'topnav',
-            order: 11,
+            order: 119,
         },
     },
 ];

@@ -29,11 +29,21 @@ class AuthorController extends Controller
 
     public function list(): Response
     {
-        $authors = Author::query()->get();
+        $query = Author::query();
+
+        $query = $this->filterService->getFilteredQuery($query);
+
+        $authors = $query->get();
 
         $collect = AuthorFilteredResource::collection($authors);
 
-        return $this->getResponse($collect, 200, 200, 'Resource not found');
+        return $this
+            ->getResponse(
+                $collect,
+                200,
+                200,
+                'Resource not found'
+            );
     }
 
     public function index(): Response
@@ -46,7 +56,13 @@ class AuthorController extends Controller
 
         $collect = new AuthorCollection($authors);
 
-        return $this->getResponse($collect, 200, 200, 'Resource not found');
+        return $this
+            ->getResponse(
+                $collect,
+                200,
+                200,
+                'Resource not found'
+            );
     }
 
     public function store(PostRequest $request): Response
@@ -54,7 +70,13 @@ class AuthorController extends Controller
         $validated = $this->validate($request, $request->rules());
         $author = Author::create($validated);
 
-        return $this->getResponse($author, 201, 200, 'Error created');
+        return $this
+            ->getResponse(
+                $author,
+                201,
+                200,
+                'Error created'
+            );
     }
 
     public function show(int $id): Response
@@ -67,7 +89,13 @@ class AuthorController extends Controller
             $resource = new AuthorResource($author);
         }
 
-        return $this->getResponse($resource, 200, 200, 'Resource not found');
+        return $this
+            ->getResponse(
+                $resource,
+                200,
+                200,
+                'Resource not found'
+            );
     }
 
     public function update(UpdateRequest $request, string $id): Response
@@ -83,7 +111,13 @@ class AuthorController extends Controller
 
         if ($authorUpdate) {
             $resource = new AuthorResource(Author::find($id));
-            return $this->getResponse($resource, 201, 200, 'Error update');
+            return $this
+                ->getResponse(
+                    $resource,
+                    201,
+                    200,
+                    'Error update'
+                );
         }
     }
 
@@ -92,10 +126,22 @@ class AuthorController extends Controller
         $author = Author::find($id);
 
         if (!$author) {
-            return $this->getResponse($author, 200, 200, 'Resource not found');
+            return $this
+                ->getResponse(
+                    $author,
+                    200,
+                    200,
+                    'Resource not found'
+                );
         } else {
             $author->delete();
-            return $this->getResponse("ID $id deleted", 200, 200, 'Error deleted');
+            return $this
+                ->getResponse(
+                    "ID $id deleted",
+                    200,
+                    200,
+                    'Error deleted'
+                );
         }
     }
 

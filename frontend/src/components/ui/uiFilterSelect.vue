@@ -3,7 +3,7 @@
   <label
       class="block">
 
-    <label>Author:</label>
+    <label>Author</label>
     <select
         @change="onChange"
         v-model="selected"
@@ -19,8 +19,6 @@
     </select>
 
   </label>
-
-  <hr>
 
 </template>
 <script>

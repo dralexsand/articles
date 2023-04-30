@@ -37,6 +37,7 @@ export default {
       newSortItems.forEach(function (item) {
         items.value.push(item)
       })
+
     })
 
     return {

@@ -1,13 +1,16 @@
 import {createStore} from "vuex";
+import createPersistedState from 'vuex-persistedstate'
+import auth from "./modules/auth.js";
+import posts from "./modules/posts.js";
 
-//import mode from "./modules/mode.js";
-//import posts from "./modules/posts.js";
-//import users from "./modules/users.js";
 
 const store = createStore({
+    plugins: [
+        createPersistedState()
+    ],
     modules: {
-        /*users,
-        posts,*/
+        auth,
+        posts
     }
 })
 

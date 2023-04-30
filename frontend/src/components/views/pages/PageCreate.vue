@@ -55,7 +55,6 @@ export default {
     }
 
     const showNewPost = () => {
-      //console.log(data.data)
       let dForm = {
         title: '',
         description: '',

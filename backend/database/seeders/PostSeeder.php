@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Author;
-use App\Models\Author;
+use App\Models\Post;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
@@ -22,7 +22,7 @@ class PostSeeder extends Seeder
             $limit = rand(3, 7);
             $i = 0;
             while ($i < $limit) {
-                Author::create([
+                Post::create([
                     'author_id' => $author->id,
                     'title' => $faker->company(),
                     'description' => $faker->text(100),

@@ -25,6 +25,10 @@
         @click="onClickApplyFilters"
     />
 
+    <span class="font-normal leading-6 text-red-400 hover:text-red-500">
+        {{ errorMessage }}
+    </span>
+
     <ui-hr/>
 
     <ui-simple-button
@@ -50,7 +54,8 @@ import uiFilterBox from "../../ui/uiFilterBox.vue";
 import uiFilterSelect from "../../ui/uiFilterSelect.vue";
 import uiHr from "../../ui/uiHr.vue";
 import uiSimpleButton from "../../ui/uiSimpleButton.vue";
-import {baseApiUrl} from "../../../use/states.js";
+import {baseApiUrl, checkAuth} from "../../../use/states.js";
+import {useStore} from "vuex";
 
 export default {
   components: {
@@ -63,7 +68,7 @@ export default {
   props: {},
   setup() {
 
-    const route = useRoute()
+    const store = useStore()
     const router = useRouter()
 
     const posts = ref({})
@@ -95,6 +100,17 @@ export default {
     const authors = ref({});
     const author_id = ref(0);
 
+    onMounted(() => {
+      //console.log('onMounted');
+      if (checkAuth(store)) {
+        filterValues.value = filteredListInit()
+        loadAuthors()
+        loadPosts()
+      } else {
+        router.push('/login')
+      }
+    })
+
     function filteredListInit() {
       let item = {}
       let list = [];
@@ -111,17 +127,18 @@ export default {
     const filterValues = ref({})
 
     const loadPosts = (page = null) => {
-      let url = getPostsPageUrl(page) + getFilters()
-      apiGet(url, showPosts)
+      let payload = getPostsPageUrl(page) + getFilters()
+      store.dispatch('posts/FETCH_POSTS', payload)
+      //timeOut(500)
+      let postsData = store.getters['posts/GET_POSTS']
+      posts.value = postsData.data.posts
+      pagination.value = postsData.data.pagination
     }
 
+    const errorMessage = ref('');
     const loadAuthors = () => {
-      let url = baseApiUrl + '/authors_list'
-      apiGet(url, setAuthors)
-    }
-
-    const setAuthors = (data) => {
-      authors.value = data.data
+      store.dispatch('posts/FETCH_AUTHORS', '')
+      authors.value = store.getters['posts/GET_AUTHORS']
     }
 
     const onHandleFilterSelect = (item) => {
@@ -160,21 +177,17 @@ export default {
         }
       }
       filters = filters.substring(0, filters.length - 1);
-
-      console.log(filters)
-
+      // console.log(filters)
       return '&filter=' + filters;
       //return '&filter=title:Prohaska-Kirlin,color:red'
     }
 
     function getPostsPageUrl(page = null) {
-      page = page === null ? '?page=1' : '?page=' + page
-      return baseApiUrl + '/posts/' + page;
+      return page === null ? '?page=1' : '?page=' + page
     }
 
     function deletePost(postId) {
       let url = baseApiUrl + '/posts/' + postId;
-      console.log(url)
       apiDelete(url)
       timeOutRefresh(500)
     }
@@ -186,18 +199,9 @@ export default {
       loadPosts()
     };
 
-
-    const showPosts = (data) => {
-      posts.value = data.data.posts
-      pagination.value = data.data.pagination
-    }
-
-    onMounted(() => {
-      //console.log('onMounted');
-      filterValues.value = filteredListInit()
-      loadAuthors()
-      loadPosts()
-    })
+    const timeOut = async (ms) => {
+      await delay(ms);
+    };
 
     const onClickApplyFilters = (item) => {
       //console.log('onClickApplyFilters clicked')
@@ -206,16 +210,12 @@ export default {
 
     const onHandleAction = (item = null) => {
       if (item === null) {
-        console.log('New')
         let path = '/create'
         router.push({path: path})
       } else if (item.type === 'view' || item.type === 'edit') {
-        //let path = '/' + item.type + '/${' + item.value + '}'
         let path = '/' + item.type + '/' + item.value
         router.push({path: path})
       } else if (item.type === 'delete') {
-        console.log('Deleting')
-        console.log(item)
         deletePost(item.value)
       }
     }
@@ -234,7 +234,8 @@ export default {
       onClickApplyFilters,
       onHandleAction,
       authors,
-      onHandleFilterSelect
+      onHandleFilterSelect,
+      errorMessage
     }
   }
 }

@@ -34,3 +34,13 @@ export const validateFormData = (dataForm) => {
         errorMessage.value = ''
     }
 }
+
+export function checkAuth(store) {
+    //console.log('checkAuth')
+    if (!store.getters["auth/GET_AUTHENTICATED"]) {
+        //router.push('login')
+        return false
+    } else {
+        return true
+    }
+}

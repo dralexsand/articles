@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Services\FilterServiceInterface;
 use App\Services\PostFilterService;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -59,16 +60,19 @@ class PostController extends Controller
         return $this->getResponse($resource, 200, 200, 'Resource not found');
     }
 
-    public function update(UpdateRequest $request, string $id): Response
+    public function update(Request $request, string $id): Response
     {
+        $postUpdateData = $request->all();
         $post = Post::find($id);
+
+        unset($postUpdateData['id']);
 
         if (!$post) {
             return $this->getResponse(null, 200, 200, 'Resource not found');
         }
 
-        $validated = $this->validate($request, $request->rules());
-        $postUpdate = $post->update($validated);
+        //$validated = $this->validate($request, $request->rules());
+        $postUpdate = $post->update($postUpdateData);
 
         if ($postUpdate) {
             $resource = new PostResource(Post::find($id));
